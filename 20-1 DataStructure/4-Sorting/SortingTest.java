@@ -103,10 +103,8 @@ public class SortingTest
 	{		
 		for(int itr = 0; itr < arr.length-1; ++itr) {
 			for(int i = 0; i < arr.length-1-itr; ++i) {
-				if(arr[i] <= arr[i+1])
-					continue;
-				
-				swap(arr, i, i+1);
+				if(arr[i] > arr[i+1])
+					swap(arr, i, i+1);
 			}
 		}
 		
@@ -131,68 +129,64 @@ public class SortingTest
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
-	private static void percolateDown(int[] arr, int n, int i) {
-		int parentIdx = i;
-		int lchildIdx = 2*i+1;
-		int rchildIdx = 2*i+2;
+	private static void percolateDown(int[] arr, int size, int root)
+	{
+		int parent = root,
+			lchild = 2*root + 1,
+			rchild = 2*root + 2;
 
-		if(lchildIdx < n && arr[parentIdx] < arr[lchildIdx])
-			parentIdx = lchildIdx;
-		if(rchildIdx < n && arr[parentIdx] < arr[rchildIdx])
-			parentIdx = rchildIdx;
+		//percolate up
+		if(lchild < size && arr[parent] < arr[lchild])
+			parent = lchild;
+		if(rchild < size && arr[parent] < arr[rchild])
+			parent = rchild;
 
-		if(i != parentIdx) {
-			swap(arr, parentIdx, i);
-			percolateDown(arr, n, parentIdx);
+		if(root != parent) {
+			swap(arr, parent, root);
+			percolateDown(arr, size, parent);
 		}
 	}
 
-	private static void h_sort(int[] arr) {
+	private static int[] DoHeapSort(int[] arr)
+	{
 		int n = arr.length;
 
-		if(n < 2)
-			return;
+		//build max heap
+		for(int i = (n+1)/2 - 1; i >= 0; --i) //last parent idx = (n+1)/2-1
+			percolateDown(arr, n, i);	// build semi max heap from last p ~ root
 
-		for(int i = n / 2 - 1; i >= 0; --i)
-			percolateDown(arr, n, i);
-
+		//place last node in root
 		for(int i = n - 1; i > 0; --i) {
 			swap(arr, 0, i);
 			percolateDown(arr, i, 0);
 		}
-	}
-
-	private static int[] DoHeapSort(int[] arr) {
-		h_sort(arr);
 
 		return arr;
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
-	private static int[] temp;
-
 	private static void merge(int[] arr, int low, int mid, int high) {
+		int[] temp = new int[high - low];
 		int temp_itr = 0, half1_itr = low, half2_itr = mid;
 
-		while (half1_itr < mid && half2_itr < high) {
-			temp[temp_itr++] = arr[arr[half1_itr] < arr[half2_itr] ? half1_itr++ : half2_itr++];
-		}
+		//iterate and merge two arrays until one reaches end
+		while (half1_itr < mid && half2_itr < high)
+			temp[temp_itr++] = arr[ (arr[half1_itr] < arr[half2_itr]) ? half1_itr++ : half2_itr++ ];
 
-		while (half1_itr < mid) {
+		//push until the other also reaches end
+		while (half1_itr < mid)
 			temp[temp_itr++] = arr[half1_itr++];
-		}
-
-		while (half2_itr < high) {
+		while (half2_itr < high)
 			temp[temp_itr++] = arr[half2_itr++];
-		}
 
-		for (int i = low; i < high; i++) {
+		//copy back
+		for (int i = low; i < high; ++i)
 			arr[i] = temp[i - low];
-		}
 	}
 
 	private static void m_sort(int[] arr, int low, int high) {
-		if (high - low < 2) 
+		//base case
+		if (high - low < 2)
 			return;
 		
 		int mid = (low + high) / 2;
@@ -203,7 +197,6 @@ public class SortingTest
 
 	private static int[] DoMergeSort(int[] arr)
 	{	
-		temp = new int[arr.length];
 		m_sort(arr, 0, arr.length);
 		
 		return arr;
@@ -211,21 +204,22 @@ public class SortingTest
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	private static int partition(int[] arr, int left, int right) {
-		int pivot = arr[(left+right) / 2];
+		int pivot = arr[(left + right) / 2];
 
 		while(left <= right) {
+			//find left idx element( >p )
 			while(arr[left] < pivot)
 				left++;
+			//find right idx element( <p )
 			while(arr[right] > pivot)
 				right--;
-			
-			if(left <= right) {
-				swap(arr, left, right);
-				left++;
-				right--;
-			}
+
+			//swap found elements
+			if(left <= right)
+				swap(arr, left++, right--);
 		}
 
+		//found left+1 idx becomes next pivot
 		return left;
 	}
 	
