@@ -115,14 +115,13 @@ public class SortingTest
 	private static int[] DoInsertionSort(int[] arr)
 	{
 		for(int itr = 1; itr < arr.length; ++itr) {
-			int i = itr;
-			
-			while(i > 0) {
-				if(arr[i] < arr[i-1])
-					swap(arr, i-1, i);
-				
-				--i;
-			}
+			int key = arr[itr];
+			int i = itr-1;
+
+			while(i >= 0 && arr[i] > key)
+				arr[i+1] = arr[i--];
+
+			arr[i+1] = key;
 		}
 		
 		return arr;
@@ -184,20 +183,20 @@ public class SortingTest
 			arr[i] = temp[i - low];
 	}
 
-	private static void m_sort(int[] arr, int low, int high) {
+	private static void divide(int[] arr, int low, int high) {
 		//base case
 		if (high - low < 2)
 			return;
 		
 		int mid = (low + high) / 2;
-		m_sort(arr, low, mid);
-		m_sort(arr, mid, high);
+		divide(arr, low, mid);
+		divide(arr, mid, high);
 		merge(arr, low, mid, high);
 	}
 
 	private static int[] DoMergeSort(int[] arr)
 	{	
-		m_sort(arr, 0, arr.length);
+		divide(arr, 0, arr.length);
 		
 		return arr;
 	}
