@@ -195,7 +195,7 @@ public class SortingTest
 	}
 
 	private static int[] DoMergeSort(int[] arr)
-	{	
+	{
 		divide(arr, 0, arr.length);
 		
 		return arr;
