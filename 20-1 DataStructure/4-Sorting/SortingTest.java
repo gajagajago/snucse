@@ -128,21 +128,20 @@ public class SortingTest
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
-	private static void percolateDown(int[] arr, int size, int root)
+	private static void heapify(int[] arr, int size, int root)
 	{
 		int parent = root,
 			lchild = 2*root + 1,
 			rchild = 2*root + 2;
 
-		//percolate up
+		//fix root as max element : percolate down
 		if(lchild < size && arr[parent] < arr[lchild])
 			parent = lchild;
 		if(rchild < size && arr[parent] < arr[rchild])
 			parent = rchild;
-
 		if(root != parent) {
 			swap(arr, parent, root);
-			percolateDown(arr, size, parent);
+			heapify(arr, size, parent);
 		}
 	}
 
@@ -151,13 +150,13 @@ public class SortingTest
 		int n = arr.length;
 
 		//build max heap
-		for(int i = (n+1)/2 - 1; i >= 0; --i) //last parent idx = (n+1)/2-1
-			percolateDown(arr, n, i);	// build semi max heap from last p ~ root
+		for(int i = (n+1)/2 - 1; i >= 0; --i) //bottom-up : last parent idx = (n+1)/2-1
+			heapify(arr, n, i);	// build semi max heap from last p ~ root
 
 		//place last node in root
 		for(int i = n - 1; i > 0; --i) {
 			swap(arr, 0, i);
-			percolateDown(arr, i, 0);
+			heapify(arr, i, 0);
 		}
 
 		return arr;
