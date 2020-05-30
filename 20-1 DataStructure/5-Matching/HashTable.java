@@ -31,11 +31,14 @@ public class HashTable {
 
     // Command '@' : Print keys in certain hash slot
     public void print(int slot_num) {
-        if (table[slot_num].isEmpty())
-            System.out.print("EMPTY");
-
-        table[slot_num].print();
-        System.out.println();
+        if (table[slot_num].isEmpty()) {
+            System.out.println("EMPTY");
+        } else {
+            table[slot_num].print();
+            String output = table[slot_num].preOrderList.toString();
+            System.out.println(output.substring(0, output.length()-1));
+            table[slot_num].initPreOrderList();
+        }
     }
 
     // Command '?' :
@@ -52,10 +55,14 @@ public class HashTable {
             int hash = hash(part);
             table[hash].searchForKey(table[hash].root, part);   // sets member var searchedIndex w/ found positions
 
-            if(table[hash].searchedIndex == null)
+            if(table[hash].searchedIndex == null) {
+                System.out.println("(0, 0)");
                 return;
+            }
+
             if(i == 0) {
                 first = new ArrayList<>(table[hash].searchedIndex);
+                table[hash].initSearchedIndex();
                 continue;
             }
 
@@ -74,6 +81,8 @@ public class HashTable {
                 if(!flag)
                     first.remove(a);
             }
+
+            table[hash].initSearchedIndex();
         }
 
         if(remainder != 0) {
@@ -81,8 +90,10 @@ public class HashTable {
             int hash = hash(part);
             table[hash].searchForKey(table[hash].root, part);   // sets member var searchedIndex w/ found positions
 
-            if(table[hash].searchedIndex == null)
+            if(table[hash].searchedIndex == null) {
+                System.out.println("(0, 0)");
                 return;
+            }
 
             ArrayList<Index> copy_first = new ArrayList<>(first);
             ArrayList<Index> temp = new ArrayList<>(table[hash].searchedIndex);
@@ -98,11 +109,20 @@ public class HashTable {
                 if(!flag)
                     first.remove(a);
             }
+
+            table[hash].initSearchedIndex();
         }
 
-        for(Index a : first) {
-            System.out.print(a.print());
+        if(first.isEmpty()) {
+            System.out.println("(0, 0)");
+            return;
         }
-        System.out.println();
+
+        StringBuilder sb = new StringBuilder();
+        for(Index a : first) {
+            sb.append(a.print());
+            sb.append(' ');
+        }
+        System.out.println(sb.toString().trim());
     }
 }

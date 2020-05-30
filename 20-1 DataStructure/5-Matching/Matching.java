@@ -22,7 +22,7 @@ public class Matching {
 				String content = input.substring(2);
 
 				switch (cmd) {
-					case '>' :
+					case '<' :
 						loadFile(content);
 						break;
 					case '@' :
@@ -70,5 +70,7 @@ public class Matching {
 		table.print(slotNum);
 	}
 
-	private static void searchPattern(String content) {	table.search(content);	}
+	private static void searchPattern(String content) {
+		table.search(content);
+	}
 }

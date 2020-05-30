@@ -4,6 +4,7 @@ public class AVLTree {
 
     public Node root;
     public ArrayList<Index> searchedIndex;
+    public StringBuilder preOrderList = new StringBuilder();
 
     // Get total height of a node
     private int height(Node n) {
@@ -99,7 +100,8 @@ public class AVLTree {
 
     private void preOrder(Node node) {
         if (node != null) {
-            System.out.print(node.getKey() + " ");
+            preOrderList.append(node.getKey());
+            preOrderList.append(' ');
             preOrder(node.getL_child());
             preOrder(node.getR_child());
         }
@@ -116,6 +118,8 @@ public class AVLTree {
         }
     }
 
+    public void initSearchedIndex() { searchedIndex = new ArrayList<>(); }
+
     public boolean isEmpty() { return root == null; }
 
     public void print() {
@@ -123,5 +127,7 @@ public class AVLTree {
             return;
         else preOrder(root);
     }
+
+    public void initPreOrderList() { preOrderList = new StringBuilder(); }
 }
 

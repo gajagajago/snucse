@@ -12,5 +12,5 @@ public class Index {
 
     public int getRow() { return row; }
 
-    public String print() { return ("(" + line + ", " + row + ") "); }
+    public String print() { return ("(" + line + ", " + row + ")"); }
 }
