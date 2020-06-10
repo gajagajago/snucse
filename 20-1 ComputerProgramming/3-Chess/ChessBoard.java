@@ -282,6 +282,13 @@ public class ChessBoard {
 						possibleMoves = new ArrayList<>();
 						turn = (turn == PlayerColor.black) ? PlayerColor.white : PlayerColor.black;
 
+						if(findKing(turn) == null) {
+							end = true;
+							setStatus("KING DEAD GAMEOVER");
+							break;
+						}
+
+
 						String s1 = "";
 						String s2 = "";
 						PlayerColor checkedColor = turn == PlayerColor.black ? PlayerColor.black : PlayerColor.white;
@@ -289,7 +296,7 @@ public class ChessBoard {
 						if(isCheck(checkedColor, findKing(checkedColor))) {
 							s1 = "CHECK";
 							if(isCheckMate(checkedColor)) {
-								s2 = "MATE";
+								s2 = "MATE GAMEOVER";
 								end = true;
 							}
 						}
@@ -609,7 +616,7 @@ public class ChessBoard {
 		Point kingPosition = findKing(pc);
 		System.out.println("king position = " + kingPosition.toString());
 		boolean isMate = true;
-		
+
 
 		for(int i = 0; i < 8; ++i) {
 			for(int j = 0; j < 8; ++j) {
