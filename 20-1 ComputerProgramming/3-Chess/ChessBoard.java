@@ -225,9 +225,20 @@ public class ChessBoard {
 			if(end) return;
 
 			Piece clickedPiece = getIcon(curr.x, curr.y);
+			boolean changePiece = false;
 
-			if(firstClick) {
+			if(!firstClick)
+				changePiece = isAlly(curr.x, curr.y, firstClickedPiece.color);	// flag to verify change
+
+
+			if(firstClick || changePiece) {
 				if(clickedPiece.color != turn) return;
+
+				if(changePiece) {
+					for(Point p : possibleMoves)
+						unmarkPosition(p.x, p.y);
+					possibleMoves = new ArrayList<>();
+				}
 
 				switch (clickedPiece.type) {
 					case king:
@@ -299,7 +310,7 @@ public class ChessBoard {
 					}
 				}
 
-				if(!isSecondClickValid) {
+				if(!isSecondClickValid) {	//invalid second click
 					for(Point p : possibleMoves)
 						unmarkPosition(p.x, p.y);
 					firstClick = true;
@@ -481,7 +492,7 @@ public class ChessBoard {
 			}
 		}
 
-		return null;	//
+		return null;
 	}
 
 	boolean isCheck(PlayerColor pc, Point king) {
@@ -607,9 +618,7 @@ public class ChessBoard {
 
 	boolean isCheckMate(PlayerColor pc) {
 		Point kingPosition = findKing(pc);
-		System.out.println("king position = " + kingPosition.toString());
 		boolean isMate = true;
-
 
 		for(int i = 0; i < 8; ++i) {
 			for(int j = 0; j < 8; ++j) {
