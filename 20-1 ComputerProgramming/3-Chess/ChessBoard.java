@@ -228,8 +228,7 @@ public class ChessBoard {
 			boolean changePiece = false;
 
 			if(!firstClick)
-				changePiece = isAlly(curr.x, curr.y, firstClickedPiece.color);	// flag to verify change
-
+				changePiece = isAlly(curr.x, curr.y, firstClickedPiece.color);	// flag to verify change in piece
 
 			if(firstClick || changePiece) {
 				if(clickedPiece.color != turn) return;
