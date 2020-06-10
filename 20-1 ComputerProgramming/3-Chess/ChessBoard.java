@@ -208,15 +208,11 @@ public class ChessBoard {
 
 
 //======================================================Implement below=================================================================//
-	enum MagicType {MARK, CHECK, CHECKMATE};
-	private int selX, selY;
-	private boolean check, checkmate, end;
-
 	PlayerColor turn;
 	boolean firstClick;	// flag to notify 1st / 2nd click
-	Piece clickedPiece;			// piece clicked at each click
+	boolean end;
 	Piece firstClickedPiece;	// saved 1st clicked piece for move
-	Point firstClickedPiecePosition;	// saved 1st clicked piece position for removal
+	Point firstClickedPiecePoint;	// saved 1st clicked piece position for removal
 	ArrayList<Point> possibleMoves;	// saved movable positions for 1st clicked piece
 
 	class ButtonListener implements ActionListener{
@@ -228,12 +224,10 @@ public class ChessBoard {
 		public void actionPerformed(ActionEvent e) {
 			if(end) return;
 
-			clickedPiece = getIcon(curr.x, curr.y);
+			Piece clickedPiece = getIcon(curr.x, curr.y);
 
-			if(firstClick)
-			{
-				if(clickedPiece.color != turn)
-					return;
+			if(firstClick) {
+				if(clickedPiece.color != turn) return;
 
 				switch (clickedPiece.type) {
 					case king:
@@ -262,19 +256,18 @@ public class ChessBoard {
 					markPosition(p.x, p.y);
 
 				firstClickedPiece = clickedPiece;
-				firstClickedPiecePosition = curr;
-
+				firstClickedPiecePoint = curr;
 				firstClick = false;
 			}
 			else {
-				Point secondClickedPosition = curr;
+				Point secondClickedPoint = curr;
 				boolean isSecondClickValid = false;	//flag to indicate whether valid move is clicked
 
 				for(Point p : possibleMoves) {
-					if(p.equals(secondClickedPosition)) {
+					if(p.equals(secondClickedPoint)) {
 						isSecondClickValid = true;
 						setIcon(curr.x, curr.y, firstClickedPiece);
-						setIcon(firstClickedPiecePosition.x, firstClickedPiecePosition.y, new Piece());
+						setIcon(firstClickedPiecePoint.x, firstClickedPiecePoint.y, new Piece());
 						for(Point po : possibleMoves)
 							unmarkPosition(po.x, po.y);
 
@@ -282,21 +275,21 @@ public class ChessBoard {
 						possibleMoves = new ArrayList<>();
 						turn = (turn == PlayerColor.black) ? PlayerColor.white : PlayerColor.black;
 
+
+						// killed enemy king case
 						if(findKing(turn) == null) {
 							end = true;
-							setStatus("KING DEAD GAMEOVER");
+							setStatus(turn + "'s turn / king dead / GAMEOVER");
 							break;
 						}
 
-
 						String s1 = "";
 						String s2 = "";
-						PlayerColor checkedColor = turn == PlayerColor.black ? PlayerColor.black : PlayerColor.white;
 
-						if(isCheck(checkedColor, findKing(checkedColor))) {
-							s1 = "CHECK";
-							if(isCheckMate(checkedColor)) {
-								s2 = "MATE GAMEOVER";
+						if(isCheck(turn, findKing(turn))) {
+							s1 = "/ check";
+							if(isCheckMate(turn)) {
+								s2 = "mate / GAMEOVER";
 								end = true;
 							}
 						}
@@ -320,7 +313,7 @@ public class ChessBoard {
 		turn = PlayerColor.black;
 		firstClick = true;
 		possibleMoves = new ArrayList<>();
-		setStatus(turn+"'s turn ");
+		setStatus(turn + "'s turn ");
 		end = false;
 	}
 
@@ -649,7 +642,6 @@ public class ChessBoard {
 
 						if(!isCheck(pc,findKing(pc))) {
 							isMate = false;	//need opt
-							System.out.println("Ally on " + new Point(i,j).toString() + "can make king safe");
 						}
 
 						setIcon(i,j,getIcon(p.x, p.y));
