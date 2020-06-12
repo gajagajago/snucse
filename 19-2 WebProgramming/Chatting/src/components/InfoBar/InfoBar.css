@@ -1,0 +1,50 @@
+.infoBar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	background: #08c457;
+	border-radius: 4px 4px 0 0;
+	height: 60px;
+	width: 100%;
+	box-shadow: 0px 2px 4px #ccc;
+}
+
+.leftInnerContainer {
+	flex: 0.5;
+	display: flex;
+	align-items: center;
+	margin-left: 5%;
+	color: white;
+}
+
+.rightInnerContainer {
+	display: flex;
+	flex: 0.5;
+	justify-content: flex-end;
+	margin-right: 5%;
+}
+
+.onlineIcon {
+	margin-right: 5%;
+}
+
+.loginInput {
+	border: none;
+	border-radius: 0;
+	padding: 5px;
+	font-size: 1.2em;
+}
+
+.loginButton {
+	padding: 5px;
+}
+
+.logout {
+	cursor: pointer;
+}
+
+@media (max-width: 760px) {
+	.rightInnerContainer {
+		flex: 1;
+	}
+}
