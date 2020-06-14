@@ -1,0 +1,16 @@
+#selfie-image {
+  height: calc(100% - 100px);
+  width: auto;
+}
+#selfie-input {
+  display: none;
+}
+label[for="selfie-input"] {
+  width: 100%;
+  height: 100%;
+}
+#selfie-add-box {
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}

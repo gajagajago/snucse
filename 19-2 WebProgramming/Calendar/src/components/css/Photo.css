@@ -1,0 +1,22 @@
+#add-box {
+  width: 150px;
+  height: 150px;
+  cursor: pointer;
+}
+#photo-input {
+  display: none;
+}
+#photo-area {
+  overflow: auto;
+}
+.hover {
+  width: 100%;
+  height: 100%;
+  background-color: #7595BF;
+  opacity: 0;
+}
+.hover:hover {
+  width: 100%;
+  height: 100%;
+  opacity: 0.5;
+}
