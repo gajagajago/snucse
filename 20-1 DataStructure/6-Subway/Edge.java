@@ -18,4 +18,5 @@ public class Edge{
     public void setWeight(long w) {
         weight = w;
     }
+
 }

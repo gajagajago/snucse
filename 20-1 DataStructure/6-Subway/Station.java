@@ -1,17 +1,19 @@
 import java.util.LinkedList;
 
 public class Station implements Comparable<Station>{
-    private String name;
-    private LinkedList<Edge> reachable;
+    private final String name;
+    private final LinkedList<Edge> reachable;
 
     public boolean visited;
     public long distance;
+    public Station track;
 
     public Station(String s) {
         name = s;
         reachable = new LinkedList<Edge>();
         visited = false;
         distance = Integer.MAX_VALUE;
+        track = null;
     }
 
     public String getName() {
@@ -24,6 +26,10 @@ public class Station implements Comparable<Station>{
 
     public void add_reachable(Edge e) {
         reachable.add(e);
+    }
+
+    public void setDistance(long d) {
+        distance = d;
     }
 
     @Override
