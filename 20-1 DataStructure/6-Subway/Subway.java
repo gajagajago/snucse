@@ -15,10 +15,19 @@ public class Subway{
 
         try {
             db = build_map(path);
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+            String[] input = br.readLine().split(" ");
+            String route = navigate(db, input[0], input[1]);
+
+            System.out.println(route);
+
         } catch (IOException e) {
             System.err.println("올바르지 않은 데이터 파일입니다.");
             System.exit(1);
         }
+
+
 
     }
 
@@ -64,13 +73,24 @@ public class Subway{
             from.add_reachable(new Edge(to, time));
         }
 
-        Station b = db.get("강남");
-        LinkedList<Edge> r = b.getReachable();
-        for(Edge e : r) {
-            System.out.print(e.getDest().getName() + " ");
-            System.out.println(e.getWeight());
-        }
+//        Station b = db.get("강남");
+//        LinkedList<Edge> r = b.getReachable();
+//        for(Edge e : r) {
+//            System.out.print(e.getDest().getName() + " ");
+//            System.out.println(e.getWeight());
+//        }
         
         return db;
+    }
+
+    public static String navigate(HashMap<String, Station> db, String from, String to) {
+        Station start = db.get(from);
+
+        LinkedList<Edge> reachable = start.getReachable();
+        StringBuilder sb = new StringBuilder();
+        for(Edge e : reachable)
+            sb.append(e.getDest().getName() + " ");
+
+        return sb.toString();
     }
 }
