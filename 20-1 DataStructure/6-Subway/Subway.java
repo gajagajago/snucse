@@ -85,12 +85,45 @@ public class Subway{
 
     public static String navigate(HashMap<String, Station> db, String from, String to) {
         Station start = db.get(from);
+        Station end = db.get(to);
+        dijkstra(start, end);
 
-        LinkedList<Edge> reachable = start.getReachable();
-        StringBuilder sb = new StringBuilder();
-        for(Edge e : reachable)
-            sb.append(e.getDest().getName() + " ");
+//        LinkedList<Edge> reachable = start.getReachable();
+//        StringBuilder sb = new StringBuilder();
+//        for(Edge e : reachable)
+//            sb.append(e.getDest().getName() + " ");
 
-        return sb.toString();
+
+
+        return "";
     }
-}
+
+    public static void dijkstra(Station a, Station b) {
+        Station curr = a;
+        curr.visited = true;
+        curr.distance = 0;
+
+        PriorityQueue<Station> queue = new PriorityQueue<>();
+        queue.offer(curr);
+
+        int i = 0;
+        while(curr != b) {
+            curr = queue.poll();
+            curr.visited = true;
+            System.out.println(i+"th visit : " + curr.getName());
+
+            for(Edge e : curr.getReachable()) {
+                Station temp_dest = e.getDest();
+                if(temp_dest.visited == true)
+                    continue;
+                long accum_distance = curr.distance + e.getWeight();
+                temp_dest.distance = accum_distance < temp_dest.distance ? accum_distance : temp_dest.distance;
+//                System.out.println("Option " + temp_dest.getName() + " takes " + temp_dest.distance);
+                if(queue.contains(temp_dest))
+                    continue;
+                queue.offer(temp_dest);
+            }
+            i++;
+        }
+    }
+ }
