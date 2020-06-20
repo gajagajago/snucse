@@ -16,6 +16,12 @@ public class Station implements Comparable<Station>{
         track = null;
     }
 
+    public void init() {
+        visited = false;
+        distance = Integer.MAX_VALUE;
+        track = null;
+    }
+
     public String getName() {
         return name;
     }
