@@ -17,7 +17,7 @@ for /l %%i in (1, 1, 30) do (
 						
 	java -Dfile.encoding=UTF-8 Subway !a! < testset\input\%%i.txt > my_output\%%i.txt
 )
-for /l %%i in (1, 31, 60) do (
+for /l %%i in (31, 1, 60) do (
 	SETLOCAL EnableDelayedExpansion
 	for /f "delims=" %%t in (testset\argument\%%i.txt) do (
 		set b=%%t)

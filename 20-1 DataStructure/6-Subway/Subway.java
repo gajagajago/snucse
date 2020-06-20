@@ -21,10 +21,9 @@ public class Subway{
             System.exit(1);
         }
 
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String line;
         while(true) {
-            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-            final String line;
-
             try {
                 line = br.readLine();
                 if(line == null || line.equals("QUIT"))
@@ -34,10 +33,7 @@ public class Subway{
                 initNodes(db);
                 navigate(input[0], input[1]);
 
-            } catch (IOException e) {
-                System.err.println("입력을 읽던 중 에러가 발생했습니다.");
-                System.exit(1);
-            } catch (IllegalArgumentException e) {
+            } catch (IllegalArgumentException | IOException e) {
                 System.err.println("올바르지 않은 입력입니다");
                 continue;
             }
@@ -116,7 +112,7 @@ public class Subway{
                     continue;
                 initNodes(db);  //db안의 모든 node를 init해준다
                 TrackAndDistance cmp_result = dijkstra(start.get(i), end.get(j));
-                if(cmp_result.distance < temp_result.distance)
+                if(cmp_result.compareTo(temp_result) == -1)
                     temp_result = cmp_result;
             }
         }
@@ -135,13 +131,29 @@ public class Subway{
         System.out.println(temp_result.distance);
     }
 
-    static class TrackAndDistance {
+    static class TrackAndDistance implements Comparable<TrackAndDistance>{
         private ArrayList<Station> track;
         private long distance;
+        private int transferCount;
 
-        public TrackAndDistance(ArrayList<Station> t, long d) {
+        public TrackAndDistance(ArrayList<Station> t, long d, int t_count) {
             track = t;
             distance = d;
+            transferCount = t_count;
+        }
+
+        @Override
+        public int compareTo(TrackAndDistance o) {
+            int cmp = 0;
+            if(distance < o.distance) {
+                cmp = -1;
+            }else if(distance == o.distance) {
+                cmp = transferCount < o.transferCount ? -1 : 1;
+            }else {
+                cmp = 1;
+            }
+
+            return cmp;
         }
     }
 
@@ -155,7 +167,7 @@ public class Subway{
             for(Edge e : curr.getReachable()) {
                 if(e.getDest().visited == false) {
                     long accum_distance = curr.distance + e.getWeight();
-                    if(accum_distance < e.getDest().distance) {
+                    if(accum_distance <= e.getDest().distance) {
                         e.getDest().setDistance(accum_distance);
                         e.getDest().track = curr;
                     }
@@ -168,13 +180,19 @@ public class Subway{
 
         final long total_distance = curr.distance;
 
-        ArrayList<Station> a = new ArrayList<>();
+        ArrayList<Station> track = new ArrayList<>();
+        String currName = curr.getName();
+        int transfer_count = 0;
         while(curr != null) {
-            a.add(curr);
+            track.add(curr);
             curr = curr.track;
+            if(curr!= null) {
+                if(!currName.equals(curr.getName())) { currName = curr.getName(); }
+                else { transfer_count++; }
+            }
         }
 
-        return new TrackAndDistance(a, total_distance);
+        return new TrackAndDistance(track, total_distance, transfer_count);
     }
 
     public static void initNodes(HashMap<String, ArrayList<Station>> data) {
