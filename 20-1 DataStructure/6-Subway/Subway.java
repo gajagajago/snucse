@@ -49,12 +49,13 @@ public class Subway{
 
             ArrayList<Station> near = db.get(name);
             if(near == null) {
-                System.out.println(name + " 's near is empty");
+//                System.out.println(name + " 's near is empty");
                 near = new ArrayList<Station>();
                 db.put(name, near);
-            } else {
-                System.out.println(name + " 's near is NOT empty");
             }
+//            else {
+//                System.out.println(name + " 's near is NOT empty");
+//            }
 
             near.add(station);
             //현재 db 내 모든 역의 arraylist가 1개 이상 element 보유
@@ -92,13 +93,13 @@ public class Subway{
         }
 
         // 확인해보기. 환승역일 시 본인으로 가는 경로 존재[5]
-        int itr1 = 0;
-        for(Station s : db.get("서울대")) {
-            for(Edge e : s.getReachable()) {
-                System.out.println(itr1 + " 서울대 ->" + e.getDest().getName());
-            }
-            itr1++;
-        }
+//        int itr1 = 0;
+//        for(Station s : db.get("서울대")) {
+//            for(Edge e : s.getReachable()) {
+//                System.out.println(itr1 + " 서울대 ->" + e.getDest().getName());
+//            }
+//            itr1++;
+//        }
 
         return db;
     }
@@ -109,9 +110,8 @@ public class Subway{
         int start_transfer_size = start.size();
         int end_transfer_size = end.size();
 
-        String[] res = new String[start_transfer_size*end_transfer_size];
-        System.out.println("시작역 환승 개수: " + start_transfer_size);
-        System.out.println("끝역 환승 개수: " + end_transfer_size);
+//        System.out.println("시작역 환승 개수: " + start_transfer_size);
+//        System.out.println("끝역 환승 개수: " + end_transfer_size);
 
         TrackAndDistance temp_result = dijkstra(start.get(0), end.get(0));
 
@@ -121,46 +121,24 @@ public class Subway{
                     continue;
                 initNodes(db);  //db안의 모든 node를 init해준다
                 TrackAndDistance cmp_result = dijkstra(start.get(i), end.get(j));
-                System.out.println("Temp 거리 = " + temp_result.distance + " Cmp 거리 = " + cmp_result.distance);
+//                System.out.println("Temp 거리 = " + temp_result.distance + " Cmp 거리 = " + cmp_result.distance);
                 if(cmp_result.distance < temp_result.distance)
                     temp_result = cmp_result;
             }
         }
 
-        StringBuilder sb = new StringBuilder();
-        Stack<String> transfer_check = new Stack<>();
-        int tempSize = temp_result.track.size();
-        transfer_check.push(temp_result.track.get(0).getName());
 
-        boolean diff = true;
-        for(int i = 1; i < tempSize; ++i) {
-            if(!transfer_check.peek().equals(temp_result.track.get(i).getName())) {
-                System.out.println("here1");
-
-                if(diff = false) {
-                    StringBuilder build = new StringBuilder();
-                    build.append('[');
-                    String s = transfer_check.pop();
-                    build.append(s);
-                    build.append(']');
-                    String a = build.toString();
-                    transfer_check.push(a);
-                    diff = true;
-                }else {
-                    transfer_check.push(temp_result.track.get(i).getName());
-                }
+        Station last = temp_result.track.get(temp_result.track.size()-1);
+        for(int i = temp_result.track.size()-2; i >= 0; --i) {
+            if(temp_result.track.get(i).getName().equals(last.getName())) {
+                System.out.print("[" + last.getName() + "] ");
+                i--;
+            }else {
+                System.out.print(last.getName() + " ");
             }
-            else {
-                System.out.println("here2");
-                diff = false;
-            }
+            last = temp_result.track.get(i);
         }
-
-        while(!transfer_check.isEmpty())
-            sb.append(transfer_check.pop() + " ");
-
-        String result = sb.toString().trim();
-        System.out.println(result);
+        System.out.println(last.getName());
         System.out.println(temp_result.distance);
     }
 
@@ -197,18 +175,18 @@ public class Subway{
         }
 
         final long total_distance = curr.distance;
-        System.out.println("final d " + total_distance);
+//        System.out.println("final d " + total_distance);
 
         ArrayList<Station> a = new ArrayList<>();
         while(curr != null) {
             a.add(curr);
             curr = curr.track;
         }
-
-        for(Station s : a) {
-            System.out.print(s.getName() + " <- ");
-        }
-        System.out.println();
+//
+//        for(Station s : a) {
+//            System.out.print(s.getName() + " <- ");
+//        }
+//        System.out.println();
 
         return new TrackAndDistance(a, total_distance);
 
