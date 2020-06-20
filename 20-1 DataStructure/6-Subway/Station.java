@@ -2,15 +2,15 @@ import java.util.LinkedList;
 
 public class Station implements Comparable<Station>{
     private final String name;
-    private final LinkedList<Edge> reachable;
+    private final LinkedList<Rail> reachable;
 
-    public boolean visited;
-    public long distance;
-    public Station track;
+    private boolean visited;
+    private long distance;
+    private Station track;
 
     public Station(String s) {
         name = s;
-        reachable = new LinkedList<Edge>();
+        reachable = new LinkedList<Rail>();
         visited = false;
         distance = Integer.MAX_VALUE;
         track = null;
@@ -26,17 +26,27 @@ public class Station implements Comparable<Station>{
         return name;
     }
 
-    public LinkedList<Edge> getReachable() {
+    public LinkedList<Rail> getReachable() {
         return reachable;
     }
 
-    public void add_reachable(Edge e) {
+    public void add_reachable(Rail e) {
         reachable.add(e);
     }
+
+    public long getDistance() { return distance; }
 
     public void setDistance(long d) {
         distance = d;
     }
+
+    public boolean getVisited() { return visited; }
+
+    public void setVisited(boolean v) { visited = v; }
+
+    public Station getTrack() { return track; }
+
+    public void setTrack(Station track) { this.track = track; }
 
     @Override
     public int compareTo(Station o) {

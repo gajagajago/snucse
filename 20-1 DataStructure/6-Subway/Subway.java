@@ -26,16 +26,17 @@ public class Subway{
         while(true) {
             try {
                 line = br.readLine();
-                if(line == null || line.equals("QUIT"))
-                    break;
+                if(line == null || line.equals("QUIT")) { break; }
 
                 String[] input = line.split(" ");
-                initNodes(db);
+                initNodes(db);  // initiation for more than 2 lines of input
                 navigate(input[0], input[1]);
-
-            } catch (IllegalArgumentException | IOException e) {
+            } catch (IllegalArgumentException e) {
                 System.err.println("올바르지 않은 입력입니다");
                 continue;
+            } catch (IOException e) {
+                System.err.println("입력을 처리하는 과정에서 에러가 발생했습니다.");
+                System.exit(1);
             }
         }
     }
@@ -64,7 +65,7 @@ public class Subway{
             }
             linkedLines.add(station);
 
-            id_db.put(terms[0], station);
+            id_db.put(id, station);
         }
 
         while(itr.hasNext()) {
@@ -76,7 +77,7 @@ public class Subway{
             Station from = id_db.get(from_id);
             Station to = id_db.get(to_id);
             //각 역의 호선별로 reachable한 정보 저장
-            from.add_reachable(new Edge(to, takes));
+            from.add_reachable(new Rail(to, takes));
         }
 
         for(ArrayList<Station> stations : db.values()) {
@@ -88,8 +89,8 @@ public class Subway{
                     for(int j = i+1; j < size; ++j) {
                         Station lhs = stations.get(i);
                         Station rhs = stations.get(j);
-                        lhs.add_reachable(new Edge(rhs, weight));
-                        rhs.add_reachable(new Edge(lhs, weight));
+                        lhs.add_reachable(new Rail(rhs, weight));
+                        rhs.add_reachable(new Rail(lhs, weight));
                     }
                 }
             }
@@ -158,34 +159,34 @@ public class Subway{
     }
 
     public static TrackAndDistance dijkstra(Station start, Station end) {
-        start.visited = true;
-        start.distance = 0;
+        start.setVisited(true);
+        start.setDistance(0);
         Station curr = start;
         PriorityQueue<Station> queue = new PriorityQueue<Station>();
 
         while(curr != end) {
-            for(Edge e : curr.getReachable()) {
-                if(e.getDest().visited == false) {
-                    long accum_distance = curr.distance + e.getWeight();
-                    if(accum_distance <= e.getDest().distance) {
+            for(Rail e : curr.getReachable()) {
+                if(e.getDest().getVisited() == false) {
+                    long accum_distance = curr.getDistance() + e.getWeight();
+                    if(accum_distance <= e.getDest().getDistance()) {
                         e.getDest().setDistance(accum_distance);
-                        e.getDest().track = curr;
+                        e.getDest().setTrack(curr);
                     }
                     queue.offer(e.getDest());
                 }
             }
             curr = queue.poll();
-            curr.visited = true;
+            curr.setVisited(true);
         }
 
-        final long total_distance = curr.distance;
+        final long total_distance = curr.getDistance();
 
         ArrayList<Station> track = new ArrayList<>();
         String currName = curr.getName();
         int transfer_count = 0;
         while(curr != null) {
             track.add(curr);
-            curr = curr.track;
+            curr = curr.getTrack();
             if(curr!= null) {
                 if(!currName.equals(curr.getName())) { currName = curr.getName(); }
                 else { transfer_count++; }

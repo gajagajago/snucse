@@ -1,8 +1,8 @@
-public class Edge{
-    Station dest;
-    long weight;
+public class Rail{
+    private Station dest;
+    private long weight;
 
-    public Edge(Station d, long w) {
+    public Rail(Station d, long w) {
         dest = d;
         weight = w;
     }
@@ -14,9 +14,4 @@ public class Edge{
     public long getWeight() {
         return weight;
     }
-
-    public void setWeight(long w) {
-        weight = w;
-    }
-
 }
