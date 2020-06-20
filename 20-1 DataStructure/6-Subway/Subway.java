@@ -16,18 +16,25 @@ public class Subway{
         Path path = Paths.get(args[0]);
         HashMap<String, ArrayList<Station>> db;
 
-        try {
-            db = build_map(path);
+        while(true) {
+            try {
+                db = build_map(path);
 
-            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-            String[] input = br.readLine().split(" ");
-            navigate(input[0], input[1]);
+                BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+                String line = br.readLine();
 
+                if(line.equals("QUIT"))
+                    break;
 
-        } catch (IOException e) {
-            System.err.println("올바르지 않은 입력입니다");
-            System.exit(1);
+                String[] input = line.split(" ");
+                navigate(input[0], input[1]);
+            } catch (IOException e) {
+                System.err.println("올바르지 않은 입력입니다");
+                System.exit(1);
+            }
         }
+
+
     }
 
     public static HashMap<String, ArrayList<Station>> build_map(Path path) throws IOException {
